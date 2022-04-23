@@ -193,8 +193,8 @@ $$\frac{v_t}{1-\beta^t} = \beta v_{t-1} + (1 - \beta)\theta_t$$
 
 for l = 1, .. , L：
 $$v_{dW^{[l]}} = \beta v_{dW^{[l]}} + (1 - \beta) dW^{[l]}$$
-$$v\_{db^{[l]}} = \beta v\_{db^{[l]}} + (1 - \beta) db^{[l]}$$
-$$W^{[l]} := W^{[l]} - \alpha v\_{dW^{[l]}}$$
+$$v_{db^{[l]}} = \beta v_{db^{[l]}} + (1 - \beta) db^{[l]}$$
+$$W^{[l]} := W^{[l]} - \alpha v_{dW^{[l]}}$$
 $$b^{[l]} := b^{[l]} - \alpha v\_{db^{[l]}}$$
 
 其中，将动量衰减参数 $β$ 设置为 0.9 是超参数的一个常见且效果不错的选择。当 $β$ 被设置为 0 时，显然就成了 batch 梯度下降法。
@@ -283,17 +283,17 @@ $β_1$、$β_2$、$ϵ$ 通常不需要调试。
 
 最常用的学习率衰减方法：
 
-$$\alpha = \frac{1}{1 + decay\\\_rate * epoch\\\_num} * \alpha\_0$$
+$$\alpha = \frac{1}{1 + decay\\\_rate * epoch\\\_num} * \alpha_0$$
 
 其中，`decay_rate`为衰减率（超参数），`epoch_num`为将所有的训练样本完整过一遍的次数。
 
 * 指数衰减：
 
-$$\alpha = 0.95^{epoch\\\_num} * \alpha\_0$$
+$$\alpha = 0.95^{epoch\\\_num} * \alpha_0$$
 
 * 其他：
 
-$$\alpha = \frac{k}{\sqrt{epoch\\\_num}} * \alpha\_0$$
+$$\alpha = \frac{k}{\sqrt{epoch\\\_num}} * \alpha_0$$
 
 * 离散下降:
 
