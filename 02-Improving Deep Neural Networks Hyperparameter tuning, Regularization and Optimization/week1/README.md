@@ -1,3 +1,7 @@
+---
+
+---
+
 <h1 align="center">第二课第一周“深度学习的实用层面”</h1>
 
 # 笔记
@@ -114,10 +118,10 @@
 
 ### Logistic回归中的正则化
 
-$$J(w,b) = \frac{1}{m}\sum_{i=1}^mL(\hat{y}^{(i)},y^{(i)})+\frac{\lambda}{2m}{||w||}^2\_2$$
+$$J(w,b) = \frac{1}{m}\sum_{i=1}^mL(\hat{y}^{(i)},y^{(i)})+\frac{\lambda}{2m}{||w||}^2_2$$
 
-* L2 正则化：$$\frac{\lambda}{2m}{||w||}^2\_2 = \frac{\lambda}{2m}\sum_{j=1}^{n\_x}w^2\_j = \frac{\lambda}{2m}w^Tw$$
-* L1 正则化：$$\frac{\lambda}{2m}{||w||}\_1 = \frac{\lambda}{2m}\sum_{j=1}^{n\_x}{|w\_j|}$$
+* L2 正则化：$$\frac{\lambda}{2m}{||w||}^2_2 = \frac{\lambda}{2m}\sum_{j=1}^{n_x}w^2_j = \frac{\lambda}{2m}w^Tw$$
+* L1 正则化：$$\frac{\lambda}{2m}{||w||}_1 = \frac{\lambda}{2m}\sum_{j=1}^{n_x}{|w_j|}$$
 
 其中，λ 为 **正则化因子** ，是需要调整的 **超参数** 。
 
@@ -129,11 +133,11 @@ $$J(w,b) = \frac{1}{m}\sum_{i=1}^mL(\hat{y}^{(i)},y^{(i)})+\frac{\lambda}{2m}{||
 
 对于神经网络，加入正则化的成本函数：
 
-$$J(w^{[1]}, b^{[1]}, ..., w^{[L]}, b^{[L]}) = \frac{1}{m}\sum\_{i=1}^mL(\hat{y}^{(i)},y^{(i)})+\frac{\lambda}{2m}\sum\_{l=1}^L{{||w^{[l]}||}}^2\_F$$
+$$J(w^{[1]}, b^{[1]}, ..., w^{[L]}, b^{[L]}) = \frac{1}{m}\sum_{i=1}^mL(\hat{y}^{(i)},y^{(i)})+\frac{\lambda}{2m}\sum_{l=1}^L{{||w^{[l]}||}}^2_F$$
 
 因为 w 的大小为 ($n^{[l−1]}$, $n^{[l]}$)，因此
 
-$${{||w^{[l]}||}}^2\_F = \sum^{n^{[l-1]}}\_{i=1}\sum^{n^{[l]}}\_{j=1}(w^{[l]}\_{ij})^2$$
+$${{||w^{[l]}||}}^2_F = \sum^{n^{[l-1]}}_{i=1}\sum^{n^{[l]}}_{j=1}(w^{[l]}_{ij})^2$$
 
 该矩阵范数被称为 **弗罗贝尼乌斯范数（Frobenius Norm）** ，所以神经网络中的正则化项被称为弗罗贝尼乌斯范数矩阵。
 
@@ -236,7 +240,7 @@ dropout 的一大 **缺点** 是成本函数无法被明确定义。因为每次
 
 然而，Early Stopping有其自身的缺点，通常来说，机器学习训练模型有两个目标：一是优化cost function，尽量减小 $J$ ；二是防止过拟合。这两个目标彼此对立的，即减小 $J$ 的同时可能会造成过拟合，反之亦然。
 
-但是，Early Stopping的做法通过减少得带训练次数来防止过拟合，这样J就不会足够小。也就是说，early Stopping将上述两个目标融合在一起，同时优化，但可能没有“分而治之”的效果好。
+但是，Early Stopping的做法通过减少迭代训练次数来防止过拟合，这样J就不会足够小。也就是说，early Stopping将上述两个目标融合在一起，同时优化，但可能没有“分而治之”的效果好。
 
 ## 标准化(归一化)输入
 
@@ -280,7 +284,7 @@ $$\hat{Y} = W^{[L]}W^{[L-1]}...W^{[2]}W^{[1]}X$$
 
 根据
 
-$$z={w}_1{x}\_1+{w}\_2{x}\_2 + ... + {w}\_n{x}\_n + b$$
+$$z={w}_1{x}_1+{w}_2{x}_2 + ... + {w}_n{x}_n + b$$
 
 ![](https://raw.githubusercontent.com/AlbertHG/Coursera-Deep-Learning-deeplearning.ai/master/02-Improving%20Deep%20Neural%20Networks%20Hyperparameter%20tuning%2C%20Regularization%20and%20Optimization/week1/md_images/13.jpg)
 
@@ -296,7 +300,7 @@ $$z={w}_1{x}\_1+{w}\_2{x}\_2 + ... + {w}\_n{x}\_n + b$$
     ```py
     w[l] = np.random.randn(n[l],n[l-1])*np.sqrt(2/n[l-1])  
     ```
-其中$n$是输入的神经元个数，也就是 $n^{[l-1]}$。
+    其中$n$是输入的神经元个数，也就是 $n^{[l-1]}$。
 
 ## 梯度的数值逼近
 
@@ -332,7 +336,7 @@ $$J(W^{[1]}, b^{[1]}, ..., W^{[L]}，b^{[L]})=J(\theta)$$
 
 接着利用 $J(\theta)$ 对每个 $\theta_i$ 计算近似梯度，其值与反向传播算法得到的 $d\theta_i$ 相比较，检查是否一致。例如，对于第i个元素，近似梯度为：
 
-$$d\theta_{approx}[i] ＝ \frac{J(\theta\_1, \theta\_2, ..., \theta\_i+\varepsilon, ...) - J(\theta\_1, \theta\_2, ..., \theta\_i-\varepsilon, ...)}{2\varepsilon}$$
+$$d\theta_{approx}[i] ＝ \frac{J(\theta_1, \theta_2, ..., \theta_i+\varepsilon, ...) - J(\theta_1, \theta_2, ..., \theta_i-\varepsilon, ...)}{2\varepsilon}$$
 
 应该
 
@@ -340,11 +344,11 @@ $$\approx{d\theta[i]} = \frac{\partial J}{\partial \theta_i}$$
 
 因此，我们用梯度检验值
 
-$$\frac{{||d\theta\_{approx} - d\theta||}\_2}{{||d\theta\_{approx}||}\_2+{||d\theta||}\_2}$$
+$$\frac{{||d\theta_{approx} - d\theta||}_2}{{||d\theta\_{approx}||}_2+{||d\theta||}_2}$$
 
 检验反向传播的实施是否正确。其中，
 
-$${||x||}\_2 = \sum^N\_{i=1}{|x_i|}^2$$
+$${||x||}_2 = \sum^N_{i=1}{|x_i|}^2$$
 
 表示向量 $x$ 的 L2-范数（也称“欧几里德范数”），它是误差平方之和，然后求平方根，得到的欧氏距离。
 

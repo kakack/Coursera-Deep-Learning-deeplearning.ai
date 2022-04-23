@@ -171,7 +171,7 @@ $$v_1 = 0.98v_0 + 0.02\theta_1$$
 
 因此，我们修改公式为
 
-$$\frac{v\_t}{1-\beta^t} = \beta v_{t-1} + (1 - \beta)\theta_t$$
+$$\frac{v_t}{1-\beta^t} = \beta v_{t-1} + (1 - \beta)\theta_t$$
 
 偏差修正得到了绿色的曲线，在开始的时候，能够得到比紫色曲线更好的计算平均的效果。随着 $t$ 逐渐增大， $\beta^{t}$ 接近于 0，所以后面绿色的曲线和紫色的曲线逐渐重合了。
 
@@ -192,7 +192,7 @@ $$\frac{v\_t}{1-\beta^t} = \beta v_{t-1} + (1 - \beta)\theta_t$$
 **具体算法如下**：
 
 for l = 1, .. , L：
-$$v\_{dW^{[l]}} = \beta v\_{dW^{[l]}} + (1 - \beta) dW^{[l]}$$
+$$v_{dW^{[l]}} = \beta v_{dW^{[l]}} + (1 - \beta) dW^{[l]}$$
 $$v\_{db^{[l]}} = \beta v\_{db^{[l]}} + (1 - \beta) db^{[l]}$$
 $$W^{[l]} := W^{[l]} - \alpha v\_{dW^{[l]}}$$
 $$b^{[l]} := b^{[l]} - \alpha v\_{db^{[l]}}$$
