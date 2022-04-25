@@ -85,12 +85,21 @@ r = np.power(10,r)
 **Batch 归一化** 会使你的参数搜索问题变得很容易，使神经网络对超参数的选择更加稳定，
 超参数范围会很庞大，工作效果也很好，也容易使你很容易地训练甚至是深层网络。
 
-标准化输入可以提高训练的速度。方法是对训练数据集进行归一化的操作，即将原始数据减去其均值 $\mu$ 后，再除以其方差 $\sigma^2$ 。但是标准化输入只是对输入进行了处理，那么对于神经网络，又该如何对各隐藏层的输入进行标准化处理呢？
+标准化输入可以提高训练的速度。方法是对训练数据集进行归一化的操作，即将原始数据减去其均值 $\mu$ 后，再除以其方差 $\sqrt{\sigma^2}$ 。但是标准化输入只是对输入进行了处理，那么对于神经网络，又该如何对各隐藏层的输入进行标准化处理呢？
 
-我们也可以用同样的思路处理隐藏层的激活值 $a[l]$，以加速 $W[l+1]$和 $b[l+1]$的训练。在实践中，经常选择标准化 $Z[l]$：
+我们也可以用同样的思路处理隐藏层的激活值 $a[l]$，以加速 $W[l+1]$和 $b[l+1]$的训练。在实践中，经常选择标准化 $Z[l]$：(关于是在激活函数之前还是之后进行BN有一定争议，两种操作都有存在，但是在这以激活函数之前BN效果更佳)
+
+给定一些NN中的中间结果后：
+
+计算均值：
 
 $$\mu = \frac{1}{m} \sum_i z^{(i)}$$
-$$\sigma^2 = \frac{1}{m} \sum_i {(z\_i - \mu)}^2$$
+计算方差：
+
+$$\sigma^2 = \frac{1}{m} \sum_i {(z_i - \mu)}^2$$
+
+归一化计算：
+
 $$z_{norm}^{(i)} = \frac{z^{(i)} - \mu}{\sqrt{\sigma^2 + \epsilon}}$$
 
 其中，$m$ 是单个 mini-batch 所包含的样本个数，$ϵ$ 是为了防止分母为零，通常取 $10^{-8}$
@@ -113,7 +122,25 @@ $$\tilde z^{(i)} = \gamma z^{(i)}_{norm} + \beta$$
 
 值得注意的是，因为Batch Norm对各隐藏层 $Z^{[l]}=W^{[l]}A^{[l-1]}+b^{[l]}$ 有去均值的操作，所以这里的常数项 $b^{[l]}$ 可以消去，其数值效果完全可以由 $\tilde Z^{[l]}$ 中的 $\beta$ 来实现。因此，我们在使用Batch Norm的时候，可以忽略各隐藏层的常数项$ b^{[l]}$ 。在使用梯度下降算法时，分别对$ W^{[l]}$， $\beta^{[l]}$ 和 $\gamma^{[l]}$ 进行迭代更新。
 
-除了传统的梯度下降算法之外，还可以使用我们之前介绍过的动量梯度下降、RMSprop或者Adam等优化算法。
+for t = 1, ..., num Mini-Batches:
+
+​	Compute  forwardprop on $X^{t}$
+
+​		In each hidden layer, use BN to replace $z^{l}$ with  $\tilde z^{(i)}$ 
+
+​	Use backprop to compute $dW^{[l]}$, $db^{[l]}$, $d\beta^{[l]}$, $d\gamma^{[l]}$
+
+​	Update parameters: 
+
+​		$W^{[l]}:=W^{[l]}-\alpha dW^{[l]}$
+
+​		$b^{[l]}:=b^{[l]}-\alpha db^{[l]}$
+
+​		$\beta^{[l]}:=\beta^{[l]}-\alpha d\beta^{[l]}$
+
+​		$\gamma^{[l]}:=\gamma^{[l]}-\alpha d\gamma^{[l]}$
+
+​	除了传统的梯度下降算法之外，还可以使用我们之前介绍过的动量梯度下降、RMSprop或者Adam等优化算法。
 
 ## Batch Norm 起作用的原因
 
@@ -131,6 +158,12 @@ Batch Normalization 效果很好的原因有以下两点：
 Batch Norm减少了各层 $W^{[l]}$ 、$B^{[l]}$ 之间的耦合性，让各层更加独立，实现自我训练学习的效果。也就是说，如果输入发生covariate shift，那么因为Batch Norm的作用，对个隐藏层输出 $Z^{[l]}$ 进行均值和方差的归一化处理， $W^{[l]}$ 和 $B^{[l]}$ 更加稳定，使得原来的模型(识别黑猫)也有不错的表现。针对上面这个黑猫的例子，如果我们使用深层神经网络，使用Batch Norm，那么该模型对花猫的识别能力(新能力)应该也是不错的。
 
 另外，Batch Normalization 也 **起到微弱的正则化**（regularization）效果。因为在每个 mini-batch 而非整个数据集上计算均值和方差，只由这一小部分数据估计得出的均值和方差会有一些噪声，因此最终计算出的 $\tilde z^{(i)}$也有一定噪声。类似于 dropout，这种噪声会使得神经元不会再特别依赖于任何一个输入特征。
+
+Summary:
+
+- Each mini-batch is scaled by the mean/variance computed on just that mini-batch.
+- This adds some noise to the values $z^{[l]}$ within that mini-batch. So similar to dropout, it adds some noise to each hidden layer's activations.
+- This has a slight regularization effect.
 
 最后，不要将 Batch Normalization 作为正则化的手段，而是当作加速学习的方式。正则化只是一种非期望的副作用，Batch Normalization 解决的还是反向传播过程中的梯度问题（梯度消失和爆炸）。
 
@@ -158,7 +191,7 @@ $$\tilde z^{(i)} = \gamma z^{(i)}_{norm} + \beta$$
 
 对于 Softmax 回归模型的输出层，即第 L 层，有：
 
-$$Z^{[L]} = W^{[L]}a^{[L-1]} + b^{[L]}$$
+$$Z^{[L]} = W^{[L]}a^{[L-1]} + b^{[L]}​$$
 
 $for\ \ i\ \ in\ \ range(L)$，有：
 
@@ -166,7 +199,7 @@ $$a^{[L]}_i = \frac{e^{Z^{[L]}_i}}{\sum^C_{i=1}e^{Z^{[L]}_i}}$$
 
 为输出层每个神经元的输出，对应属于该类的概率，满足：
 
-$$\sum^C\_{i=1}a^{[L]}\_i = 1$$
+$$\sum^C_{i=1}a^{[L]}_i = 1$$
 
 所有的 $a^{[L]}_i$ ，即 $\hat y$ ，维度为(C, 1)。
 
@@ -190,7 +223,7 @@ $$y_j = 0, j \ne i$$
 
 因此，损失函数可以简化为：
 
-$$L(\hat y, y) = -y_ilog\hat y_i = log \hat y_i$$
+$$L(\hat y, y) = -y_ilog\hat y_i = -log \hat y_i$$
 
 所有 m 个样本的**成本函数**为：
 
