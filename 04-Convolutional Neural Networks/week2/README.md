@@ -221,11 +221,19 @@ MobileNet可以允许你将你的网络部署在一些计算能力较弱的环�
 
 对于Normal Conv来说，一次计算的cots由过滤器的参数（$3 \times 3 \times 3$）乘以过滤器扫过的位置（$4 \times 4$）乘以过滤器的个数（$5$）。
 
+![](https://raw.githubusercontent.com/kakack/Coursera-Deep-Learning-deeplearning.ai/master/04-Convolutional%20Neural%20Networks/week2/md_images/23.png)
+
 对于Depthwise-Separable Conv来说，分成两步：分别是Depthwise和Pointwise。
 
-在Depthwise filter做卷积时，不再是一个$f\times f\times n_c$的过滤器，而是$n_c$个$f \times f$个过滤器，每一个过滤器对应一个输入的channel。
+在Depthwise filter做卷积时，不再是一个$f\times f\times n_c$的过滤器，而是$n_c$个$f \times f$个过滤器，每一个过滤器对应一个输入的channel。于是对于一个$6 \times 6 \times n_c$的输入，得到一个$4 \times 4 \times n_c$的中间结果。
+
+之后应用于Pointwise filter，是${n_c}'$个$1 \times 1 \times n_c$的卷积，得到$4 \times 4\times 5$的结果。
+
+总的 Computation Cost = Depthwise Cost + Pointwise Cost = #filter params x #filter positions x # of filters + #filter params x #filter positions x # of filters = 432 + 240 = 672。仅仅是normal conv的31%。整体上可以看做Normal的$\frac{1}{n_c}+\frac{1}{f^2}$。
 
 ## MobileNet架构
+
+
 
 ## EfficientNet
 
