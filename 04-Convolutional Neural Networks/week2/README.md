@@ -249,7 +249,17 @@ MobileNet可以允许你将你的网络部署在一些计算能力较弱的环�
 
 EfficientNet可以帮你实现如何为特定设备自动放大或缩小神经网络。
 
-## 使用开源的实现方案
+![](https://raw.githubusercontent.com/kakack/Coursera-Deep-Learning-deeplearning.ai/master/04-Convolutional%20Neural%20Networks/week2/md_images/27.png)
+
+对于一个已有的Baseline Network，可以有三个维度来缩放其scale：
+
+	- Resolution（R）：输入图片的像素分辨率；
+	- Depth（D）：网络的深度；
+	- Witdh（W）：网络的宽度。
+
+EfficientNet提供了R、D和W之间最佳的trade off方法。
+
+## ß使用开源的实现方案
 
 开发一个计算机视觉应用，一个常见的工作流程是，先选择一个喜欢的架构，或许是在这门课中学习到的，或者是你从朋友那听说的，或者是从文献中看到的，接着寻找一个开源实，从 GitHub 下载下来，以此基础开始构建。这样做的优点在于，这些网络通常都需要很长的时间来训练，而或许有人已经使用多个 GPU，通过庞大的数据集预先训练了这些网络，这样一来你就可以使用这些网络进行迁移学习。
 
