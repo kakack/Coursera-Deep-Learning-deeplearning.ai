@@ -233,9 +233,21 @@ MobileNet可以允许你将你的网络部署在一些计算能力较弱的环�
 
 ## MobileNet架构
 
+![](https://raw.githubusercontent.com/kakack/Coursera-Deep-Learning-deeplearning.ai/master/04-Convolutional%20Neural%20Networks/week2/md_images/24.png)
 
+最早的MobileNet中，包含了13个Depthwise-Pointwise组合，最后跟了一组Pooling Layer、Fully-Connected Layer和Softmax。而在之后的MobileNet V2中，架构进行了一次升级，主要的区别就是加入了Expansion component以及residual connection（将前一层的结果直接skipped到该层的输出处）。MobileNet V2包含了17个这样的bottleneck，最后也是Pool、FC和Softmax结尾。
+
+![](https://raw.githubusercontent.com/kakack/Coursera-Deep-Learning-deeplearning.ai/master/04-Convolutional%20Neural%20Networks/week2/md_images/25.png)
+
+在一个MobileNet V2的Bottleneck中，前一层的输出会以residual connection的形式直接skipped到该层的输出位置。在non-residual部分，输入会先经过一个扩张器expansion（18个$1\times 1\times n_c$），被扩张到了$n\times n\times 18$。之后会经过一个含padding的Depthwise filter，保持$n\times n\times 18$的尺寸，最后应用于3个$1\times 1\times 18$的Pointwise filters，被投射到一个$n\times n\times 3$的结果中（这个过程也被称为Projection投影）。
+
+我们为什么会需要这个bottleneck block？总的来说这个bottleneck block完成了两件事情：通过应用expansion，可以扩大在bottleneck内部的表示的尺寸，这允许神经网络学习更丰富的功能，然后再通过Pointwise conv将其缩小到一个较小的数据量，使其可以顺利通过这个block。MobileNet V2正是通过这种既能支持更丰富的计算集，从而允许你的神经网络学习更丰富和更复杂的功能，同时还保持相对较小的内存量，即你需要从层到层传递的激活大小，这也是它比MobileNet V1表现好的原因。
+
+![](https://raw.githubusercontent.com/kakack/Coursera-Deep-Learning-deeplearning.ai/master/04-Convolutional%20Neural%20Networks/week2/md_images/26.png)
 
 ## EfficientNet
+
+EfficientNet可以帮你实现如何为特定设备自动放大或缩小神经网络。
 
 ## 使用开源的实现方案
 
