@@ -18,6 +18,9 @@
    * [网络中的网络以及1×1卷积](#网络中的网络以及1x1卷积)
    * [谷歌Inception网络简介](#谷歌inception网络简介)
    * [Inception网络](#inception网络)
+   * [MobileNet](#MobileNet)
+   * [MobileNet架构](#MobileNet架构)
+   * [EfficientNet](#EfficientNet)
    * [使用开源的实现方案](#使用开源的实现方案)
    * [迁移学习](#迁移学习)
    * [数据扩充](#数据扩充)
@@ -149,7 +152,7 @@ $$a^{[l+2]} = g(a^{[l]}) = ReLU(a^{[l]}) = a^{[l]}$$
 
 如果过滤器不止一个，而是多个（filters个），就好像有多个输入单元，输出结果是 6×6x#filters（过滤器数量）。
 
-池化能压缩数据的高度（$n\_H$）及宽度（$n\_W$），而 1×1 卷积能压缩数据的通道数（$n\_C$）。在如下图所示的例子中，用 32 个大小为 1×1×192 的滤波器进行卷积，就能使原先数据包含的 192 个通道压缩为 32 个。
+池化能压缩数据的高度（$n_H$）及宽度（$n_W$），而 1×1 卷积能压缩数据的通道数（$n_C$）。在如下图所示的例子中，用 32 个大小为 1×1×192 的滤波器进行卷积，就能使原先数据包含的 192 个通道压缩为 32 个。
 
 ![](https://raw.githubusercontent.com/AlbertHG/Coursera-Deep-Learning-deeplearning.ai/master/04-Convolutional%20Neural%20Networks/week2/md_images/13.png)
 
@@ -203,6 +206,20 @@ $$a^{[l+2]} = g(a^{[l]}) = ReLU(a^{[l]}) = a^{[l]}$$
 *大图展示如下：*
 
 ![](https://raw.githubusercontent.com/AlbertHG/Coursera-Deep-Learning-deeplearning.ai/master/04-Convolutional%20Neural%20Networks/week2/md_images/21.png)
+
+## MobileNet
+
+MobileNet可以允许你将你的网络部署在一些计算能力较弱的环境当中，比如智能手机上。
+
+产生MobileNet的动机：
+
+	- 之前罗列的一些网络架构往往需要耗费较多计算资源，如GPU和CPU，因此需要一个能部署在较低计算耗费环境中的网络结构；
+	- MobileNet可以应用于手机和一些内置的视觉应用中；
+	- Key idea：Normal vs. depthwise-seperable convolutions
+
+## MobileNet架构
+
+## EfficientNet
 
 ## 使用开源的实现方案
 
