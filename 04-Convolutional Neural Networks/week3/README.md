@@ -297,6 +297,10 @@ R-CNN（Regions with convolutional networks），会在我们的图片中选出�
 
 ## U-Net架构U-Net Architecture
 
+![](https://raw.githubusercontent.com/kakack/Coursera-Deep-Learning-deeplearning.ai/master/04-Convolutional%20Neural%20Networks/week3/md_images/21.png)
+
+在前半部分，类似于normal conv，会采用一些max pooling来减小宽高，而channel会增加（红色箭头）。后半部分会采用trans conv不断扩大dimension，减小channel数（绿色箭头），同时从左到右会有一些skipped connection类似residual block作为输入进入每一层激活函数（灰色箭头）。
+
 参考文献：
 
 [Joseph Redmon, Santosh Divvala, Ross Girshick, Ali Farhadi - You Only Look Once: Unified, Real-Time Object Detection (2015)](https://arxiv.org/abs/1506.02640)
