@@ -287,6 +287,14 @@ R-CNN（Regions with convolutional networks），会在我们的图片中选出�
 
 ## 转置卷积Transpose Convolution
 
+![](https://raw.githubusercontent.com/kakack/Coursera-Deep-Learning-deeplearning.ai/master/04-Convolutional%20Neural%20Networks/week3/md_images/20.png)
+
+常规的卷积会将一个较大尺寸的dimension缩小成一个较小尺寸的dimension，而transpose conv要做的事情恰好相反。如上图中将一个2x2的输入输出成一个4x4的输出。
+
+跟原先将filter覆盖在input上卷积计算output的顺序正好相反，TC是将filter覆盖在output上反向推得input。但是具体的计算可以看成在output上padding后，把input上每一个元素与filter相乘，结果填在output上，有overlap的部分就将所有该位置上的计算结果求和。
+
+虽然将small input放大到big output的方法有很多，但是TC有着很好的效率，同时能充分保留上下文语境。
+
 ## U-Net架构U-Net Architecture
 
 参考文献：
