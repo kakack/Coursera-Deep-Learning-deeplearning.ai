@@ -279,6 +279,12 @@ R-CNN（Regions with convolutional networks），会在我们的图片中选出�
 
 本节介绍的是语义分割算法，当我们拿到一张图片时，能够判断其中某个像素点是否属于某个物体。跟物体识别算法在目标物体上打bounding box不同的是，语义分割算法会对画面中每一个像素进行打标签，从而确定各个像素所归属的目标物体。这类算法可以应用于自动驾驶技术，从而判断视距内哪些像素位置可以驾驶通过。其他例如X光线图像分析、大脑MRI图像分析都会用到。
 
+![](https://raw.githubusercontent.com/kakack/Coursera-Deep-Learning-deeplearning.ai/master/04-Convolutional%20Neural%20Networks/week3/md_images/19.png)
+
+对于semantic segmentation算法标注的内容，会对样本中每一个像素位置进行标注，分别打上不同物体代表的标签。
+
+和常见的CNN不同的是，语义分割网络会去掉最后一些将卷积输出大小降低的层，而将卷积恢复到输入样本的尺寸（$n_H \times n_W$），这就会用到Transpose Conv。
+
 ## 转置卷积Transpose Convolution
 
 ## U-Net架构U-Net Architecture
