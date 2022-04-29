@@ -16,6 +16,9 @@
    * [Anchor Boxes](#anchor-boxes)
    * [YOLO 算法(Putting it together: YOLO algorithm)](#yolo-算法putting-it-together-yolo-algorithm)
    * [候选区域(选修)(Region proposals (Optional))](#候选区域选修region-proposals-optional)
+   * [使用U-Net进行语义分割Semantic Segmentation with U-Net](#使用U-Net进行语义分割Semantic Segmentation with U-Net)
+   * [转置卷积Transpose Convolution](#转置卷积Transpose Convolution)
+   * [U-Net架构U-Net Architecture](#U-Net架构U-Net Architecture)
 
 ## 目标定位(Object localization)
 
@@ -35,23 +38,22 @@
 
 综上，目标的标签$Y$如下几种形式：
 
-$$\left[\begin{matrix}P\_c\\\ b\_x\\\ b\_y\\\ b\_h\\\ b\_w\\\ c\_1\\\ c\_2\\\ c\_3\end{matrix}\right]
-,when P\_c=1:\left[\begin{matrix}1\\\ b\_x\\\ b\_y\\\ b\_h\\\ b\_w\\\ c\_1\\\ c\_2\\\ c\_3\end{matrix}\right] ,when P_c=0:\left[\begin{matrix}0\\\ ?\\\ ?\\\ ?\\\ ?\\\ ?\\\ ?\\\ ?\end{matrix}\right]
-$$
+$$\begin{bmatrix}P_c \\ b_x \\ b_y \\ b_h \\ b_w \\ c_1 \\ c_2 \\ c_3 \end{bmatrix},when \ P_c= 1:\begin{bmatrix}1\\ b_x \\ b_y \\ b_h \\ b_w \\ c_1 \\ c_2 \\ c_3 \end{bmatrix},when \ P_c= 0:\begin{bmatrix}0\\ ?\\ ?\\ ?\\ ?\\ ?\\ ?\\ ?\end{bmatrix}$$
+
 
 若$P_c$=0，表示没有检测到目标，则输出label后面的7个参数都可以忽略(用 ? 来表示)。
 
-损失函数可以表示为 $L(\hat y, y)$，如果使用平方误差形式，对于不同的 $P\_c$有不同的损失函数（注意下标 $i$指标签的第 $i$个值）：
+损失函数可以表示为 $L(\hat y, y)​$，如果使用平方误差形式，对于不同的 $P\_c​$有不同的损失函数（注意下标 $i​$指标签的第 $i​$个值）：
 
-1. $P\_c=1$，即$y\_1=1$：
+1. $P_c=1$，即$y_1=1$：
 
-    $L(\hat y,y)=(\hat y\_1-y\_1)^2+(\hat y\_2-y\_2)^2+\cdots+(\hat y\_8-y\_8)^2$
+    $L(\hat y,y)=(\hat y_1-y_1)^2+(\hat y_2-y_2)^2+\cdots+(\hat y_8-y_8)^2$
 
     损失值就是不同元素的平方和。
 
-2. $P\_c=0$，即$y\_1=0$：
+2. $P_c=0$，即$y_1=0$：
 
-    $L(\hat y,y)=(\hat y\_1-y\_1)^2$
+    $L(\hat y,y)=(\hat y_1-y_1)^2$
 
     *对于这种情况，不用考虑其它元素，只需要关注神经网络输出的准确度即可。*
 
@@ -128,10 +130,10 @@ YOLO算法首先将原始图片分割成n x n网格，每个网格代表一块�
 ![](https://raw.githubusercontent.com/AlbertHG/Coursera-Deep-Learning-deeplearning.ai/master/04-Convolutional%20Neural%20Networks/week3/md_images/08.jpg)
 
 然后，利用上一节卷积形式实现滑动窗口算法的思想，对该原始图片构建CNN网络，得到的的输出层维度为3 x 3 x 8。其中，3 x 3对应9个网格，每个网格的输出包含8个元素：
-$$y=\left[\begin{matrix}P\_c\\\ b\_x\\\ b\_y\\\ b\_h\\\ b\_w\\\ c\_1\\\ c\_2\\\ c\_3\end{matrix}\right]
-$$
 
-如果目标中心坐标 $(b_x,b_y)$ 不在当前网格内，则当前网格Pc=0；相反，则当前网格$P_c=1$（即只看中心坐标是否在当前网格内）。判断有目标的网格中， $b_x,b_y,b_h,b_w$ 限定了目标区域。
+$$y=\begin{bmatrix}P_c \\ b_x \\ b_y \\ b_h \\ b_w \\ c_1 \\ c_2 \\ c_3 \end{bmatrix}$$
+
+如果目标中心坐标 $(b_x,b_y)$ 不在当前网格内，则当前网格$P_c=0$；相反，则当前网格$P_c=1$（即只看中心坐标是否在当前网格内）。判断有目标的网格中， $b_x,b_y,b_h,b_w$ 限定了目标区域。
 
 - 值得注意的是，当前网格左上角坐标设定为$(0, 0)$，右下角坐标设定为$(1, 1)$， $(b_x,b_y)$ 表示坐标值，范围限定在$[0,1]$之间，
 - 但是 $b_h,b_w$ 表示比例值,可以大于 1。因为目标可能超出该网格，横跨多个区域，
@@ -145,6 +147,9 @@ $$
 - 首先这和图像分类和定位算法非常像，就是它显式地输出边界框坐标，所以这能让神经网络输出边界框，可以具有任意宽高比，并且能输出更精确的坐标，不会受到滑动窗口分类器的步长大小限制。
 
 - 其次，这是一个卷积实现，你并没有在3 × 3网格上跑9次算法，或者，如果用的是19 × 19的网格，19平方是361次，所以不需要让同一个算法跑361次。相反，这是单次卷积实现，但使用了一个卷积网络，有很多共享计算步骤，在处理这3 × 3(或者19 × 19)计算中很多计算步骤是共享的，所以这个算法效率很高。
+
+
+
 
 ## 交并比(Intersection over union)
 
@@ -270,6 +275,11 @@ R-CNN（Regions with convolutional networks），会在我们的图片中选出�
 
 这就是R-CNN或者区域CNN的特色概念，现在R-CNN算法还是很慢的。所以有一系列的研究工作去改进这个算法，所以基本的R-CNN算法是使用某种算法求出候选区域，然后对每个候选区域运行一下分类器，每个区域会输出一个标签，并输出一个边界框，这样你就能在确实存在对象的区域得到一个精确的边界框。
 
+## 使用U-Net进行语义分割Semantic Segmentation with U-Net)
+
+## 转置卷积Transpose Convolution
+
+## U-Net架构U-Net Architecture
 
 参考文献：
 
