@@ -79,3 +79,24 @@ Multi-Head注意力就是自注意力的full loop，我们把在一个序列上�
 
 ## Transformer网络
 
+在学习了自注意力和multi-head注意力后，我们将它们组合到一起成为一个Transformer架构来完成从法语到英语的翻译功能。
+
+再次用Jane visite l'Afrique en septembre这句话举例。并且加入了句子开头符$SOS$和句子终结符$EOS$。
+
+![](https://raw.githubusercontent.com/kakack/Coursera-Deep-Learning-deeplearning.ai/master/05-Sequence%20Models/week4/md_images/04.png)
+
+
+
+第一步，将这个句子中的embedding喂入一个拥有multi-head注意力的encoder block（Q、K、V），计算embedding和权重矩阵乘积并在网络中向前传递。在论文中这个encoder block会重复N次，通常N会取6。之后将输出输入到decoder block中。Decoder block的任务是输出英语翻译结果。第一个block为下一个注意力block输出Q矩阵，而encoder的输出则用于生成K和V。第二层的主要作用是预测句子中下一个输出的词。
+
+额外补充：
+
+- 输入的位置编码：在之前的注意力表达式中，单词在句子中的位置并没有体现，但位置信息在翻译中却是十分重要的。所以表示位置信息的方法是使用一个$sin$和$cos$等式的组合。（例子见图中蓝色部分）
+
+  $$PE_{pos, 2i}=sin\frac{pos}{1000^{\frac{2i}{d}}}$$
+
+  $$PE_{pos, 2i+1}=cos\frac{pos}{1000^{\frac{2i}{d}}}$$
+
+  
+
+  Mask multi-head Attention只在训练时候重要。在训练过程中会屏蔽句子最后一部分内容以模仿网络在测试时或预测期间需要做什么。换句话说，Mask multi-head Attention所做的只是反复假装网络已经完美翻译。说出前几个词并隐藏剩余的词，看看是否给出了完美的第一部分翻译，神经网络是否能准确预测序列中的下一个词。
