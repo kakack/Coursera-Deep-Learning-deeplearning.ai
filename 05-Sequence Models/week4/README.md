@@ -71,7 +71,11 @@ $$v^{<3>}=W^V\cdot x^{<3>}$$
 
 Multi-Head注意力就是自注意力的full loop，我们把在一个序列上计算一次自注意力称为a head。在multi-head注意力里，将同样的query、key和value作为输入。
 
-首相将q、k和v跟对应的权重矩阵相乘，即得到$W^Q_iq^{<i>}$、$W^K_ik^{<i>}$和$W^V_iv^{<i>}$也就是第$i$个单词的一组新的query、key和value。
+![](https://raw.githubusercontent.com/kakack/Coursera-Deep-Learning-deeplearning.ai/master/05-Sequence%20Models/week4/md_images/03.png)
+
+首先将q、k和v跟对应的权重矩阵相乘，即得到$W^Q_1q^{<i>}$、$W^K_1k^{<i>}$和$W^V_1v^{<i>}$也就是第$i$个单词的一组新的query、key和value。把整个序列中所有单词都计算一遍，得到了第一个head，如同上文中自注意力中所做的一样，于是我们得到了第一个head。第一个head可能回答了问题：What's happenning。之后计算第二个head，用到的权重矩阵变成了$W^Q_2q^{<i>}$、$W^K_2k^{<i>}$和$W^V_2v^{<i>}$，后续计算方法同上。第二个head可能回答了问题：When is something happenning。以此类推，我们通常用$h$表示head个数。
+
+我们可以把每个head当做一个不同的特征，当你将这些特征传递给一个新的网络时，你可以计算出非常丰富的句子表示。
 
 ## Transformer网络
 
