@@ -17,6 +17,8 @@
 
 我们的时序模型的复杂度会随着序列任务的复杂度的增加而增加。我们最早引入的是RNN结构，但是由于存在当输入较长依赖的序列后会出现梯度消失的问题，我们就引入了GRU，之后是LSTM模型。这些模型引入了一些**“门”**的概念来控制信息流。同样每一个单元都会耗费一些计算压力，因此每一个模型的计算复杂度都在逐步递增。而在Transformer结构中，我们会把对于整个序列的这一系列计算并行进行，因此可以一次性提取整个句子，而不是从左往右逐个计算。
 
+![](https://raw.githubusercontent.com/kakack/Coursera-Deep-Learning-deeplearning.ai/master/05-Sequence%20Models/week4/md_images/01.png)
+
 Transformer 架构的主要创新是结合了基于注意力的表示和 CNN 卷积神经网络处理方式的使用。也就是将原本基于时序的序列能像在CNN中计算所有像素组成的矩阵一样并行计算。在Transformer结构中有两个重要概念：
 
  -  自注意力：假如有一个由五个单词组成的句子，最终会为这五个单词计算五中表示：$A_1,A_2,A_3,A_4,A_5$。这是一种基于注意力的方法，可以并行计算句子中所有单词的表示。
@@ -53,6 +55,8 @@ $$v^{<3>}=W^V\cdot x^{<3>}$$
 
 其中$W^Q$、$W^K$和$W^V$是算法的参数。计算得到的这些值广义上可以看做类似在数据库冲查询得到key-val键值对结果的过程。$q^{<3>}$就像是发起了一个提问：什么是l'Afrique？
 
+![](https://raw.githubusercontent.com/kakack/Coursera-Deep-Learning-deeplearning.ai/master/05-Sequence%20Models/week4/md_images/02.png)
+
 接下去要做的就是将$q^{<3>}$和$k^{<1>}$、$k^{<2>}$、$k^{<3>}$和$k^{<4>}$做内积，来尝试回答什么是l'Afrique这个问题。这一系列操作的目的就是帮助我们提取计算$A^{<3>}$所需的最有用的信息。假设我们已知$k^{<1>}$表示的是一个人名，$k^{<2>}$表示的是visit这个动作，那么$k^{<3>}$最有可能表示visit的目的地。
 
 最后把得到的softmax内积跟各个$v^{<i>}$相乘再相加求和，得到最终的$A^{<3>}$，也可以表达成$A(q^{<3>},K,V)$。
@@ -65,7 +69,9 @@ $$v^{<3>}=W^V\cdot x^{<3>}$$
 
 ## Multi-Head注意力
 
+Multi-Head注意力就是自注意力的full loop，我们把在一个序列上计算一次自注意力称为a head。在multi-head注意力里，将同样的query、key和value作为输入。
 
+首相将q、k和v跟对应的权重矩阵相乘，即得到$W^Q_iq^{<i>}$、$W^K_ik^{<i>}$和$W^V_iv^{<i>}$也就是第$i$个单词的一组新的query、key和value。
 
 ## Transformer网络
 
